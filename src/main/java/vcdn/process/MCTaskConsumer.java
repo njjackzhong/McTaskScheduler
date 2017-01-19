@@ -1,7 +1,8 @@
 package vcdn.process;
 
-import vcdn.core.AppConfig;
+import vcdn.core.VCDNServerApp;
 import vcdn.model.MCTranscodeTask;
+import vcdn.process.proxy.MCServerProxy;
 
 /**
  * 转码任务处理线程
@@ -39,13 +40,13 @@ public class MCTaskConsumer implements Runnable {
         try {
             MCTranscodeTask mcTranscodeTask = MCTaskProcessCenter.getInstance().getTask();
             if(mcTranscodeTask!=null){
-                VCDNController.createTask(mcTranscodeTask.getTaskContent());
+                MCServerProxy.createTask(mcTranscodeTask.getTaskContent());
                 //TODO:写入数据库
             }
         } catch (Exception e) {
-            AppConfig.logger.error(e);
+            VCDNServerApp.logger.error(e);
         } finally {
-            AppConfig.logger.info("停止MCTaskConsumer");
+            VCDNServerApp.logger.info("停止MCTaskConsumer");
         }
 
     }

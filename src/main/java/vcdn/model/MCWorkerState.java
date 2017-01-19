@@ -1,13 +1,15 @@
 package vcdn.model;
 
 /**
- * 转码任务状态
+ * MediaCoder 转码服务 滴 转码任务状态
  * <p>
  * Created by jack on 2017/1/13.
  */
 public class MCWorkerState {
-    //转码状态
-    private String state;
+    //region  查询转码任务成功时，包含的属性值
+
+    //转码状态，默认值是"unknown"表示是未知状态
+    private String state=MCStatus.MC_JS_UNKNOWN;
     //转码完成比例：单位百分之几
     private int percent;
     //剩余时间：单位秒
@@ -34,12 +36,18 @@ public class MCWorkerState {
     private int videoBitrate;
     private int videoData;
 
+    //endregion
+
+
+    //region 查询转码任务失败时，包含的属性值
     // result  Worker状态查询是否成功，默认值是成功，在发生异常时，设置为"error"
     private String result = "success";
     //error  Worker状态状态查询的错误消息 例如："无法连接转码服务" 等
     private String error = "";
+    //endregion
 
 
+    //region 属性的getter & setter
     public String getState() {
         return state;
     }
@@ -175,4 +183,5 @@ public class MCWorkerState {
     public void setError(String error) {
         this.error = error;
     }
+    //endregion
 }
