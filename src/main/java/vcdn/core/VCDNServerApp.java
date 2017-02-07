@@ -7,6 +7,7 @@ import vcdn.process.MCTaskProcessCenter;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -31,7 +32,7 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 转码服务  并发任务数
      */
-    private static int mcMaxTaskNum =2;
+    private static int mcMaxTaskNum =4;
 
 
     /**
@@ -79,12 +80,26 @@ public class VCDNServerApp implements ServletContextListener {
     }
 
     /**
+     * 测试类调用此方法初始化配置信息
+     *
+     * Create: Jack      Time: 2017-01-19 08:23
+     *
+     *
+     *
+     */
+    public  void initTest(){
+        String confPath = new File("web/WEB-INF/conf").getPath();
+        init(confPath);
+    }
+
+
+    /**
      * 初始化配置
      * @return  true or false
      */
     public  boolean init(String cfgPath){
         //TODO:读取log4j.properties
-        PropertyConfigurator.configureAndWatch(FilenameUtils.concat(cfgPath,"log4j.properties"));
+        PropertyConfigurator.configureAndWatch(FilenameUtils.concat(cfgPath,"log4j.properties"),1);
         logger.error(String.format("（1）版本号:%s，成功读取log4j.properties配置文件，路径等于：%s", version.get(),FilenameUtils.concat(cfgPath,"log4j.properties")));
 
         //TODO: 读取数据库Tbl_VCDN_Config

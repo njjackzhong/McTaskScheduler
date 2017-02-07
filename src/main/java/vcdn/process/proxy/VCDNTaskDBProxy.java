@@ -24,7 +24,7 @@ public class VCDNTaskDBProxy {
         //task = "{\"/worker\":2,\"input\":\"d:\\Program\\Video\\FTP\\home.mkv\",\"output\":\"d:\\Program\\FTP\\MS\\home.mp4\",\"begin\":0,\"end\":10,\"state\":\"encoding\"}";
         MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
         mcTranscodeTask.setInput("d:\\Program\\Video\\FTP\\home.mkv");
-        mcTranscodeTask.setOutput("d:\\Program\\FTP\\MS\\home.mp4");
+        mcTranscodeTask.setOutput("d:\\Program\\Video\\FTP\\MS\\home.mp4");
         mcTranscodeTask.setTaskId(1);
 //        mcTranscodeTask.setState();
 
