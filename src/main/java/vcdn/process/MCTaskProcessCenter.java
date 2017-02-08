@@ -150,7 +150,7 @@ class MCWorkerStateSyncTask extends TimerTask {
     public void run() {
         try {
 
-            MCServerProxy.getMediaInfo();
+            //MCServerProxy.getMediaInfo();
             //TODO: 修改逻辑，读取所有状态，根据正在运行的任务数目与maxTaskNum，判断是否可以提交新任务
             int maxTaskNum = VCDNServerApp.getMcMaxTaskNum();
             for (int workerId = 0; workerId < maxTaskNum; workerId++) {

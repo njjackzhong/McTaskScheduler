@@ -39,7 +39,7 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 转码任务状态URL
      */
-    private static String mcStatusUrl = "http://192.168.199.100:19819/mc/stats/";
+    private static String mcStatusUrl = "http://127.0.0.1:19819/mc/stats/";
 
     //版本号
     private static final AtomicReference<String> version = new AtomicReference<>("v1.0.1.2017-01-17");
@@ -52,7 +52,7 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 转码任务以及任务控制访问URL
      */
-    private static String mcTransCodeUrl  = "http://192.168.199.100:19819/mc/transcoder/";
+    private static String mcTransCodeUrl = "http://127.0.0.1:19819/mc/transcoder/";
 
 
 
@@ -60,7 +60,7 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 获取转码前后文件信息
      */
-    private static String mcMediaInfoUrl = "http://192.168.199.100:19819/mc/job";
+    private static String mcMediaInfoUrl = "http://127.0.0.1:19819/mc/job";
 
 
 
