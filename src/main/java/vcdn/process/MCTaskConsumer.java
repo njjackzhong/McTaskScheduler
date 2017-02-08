@@ -44,7 +44,7 @@ public class MCTaskConsumer implements Runnable {
                 //设置workerId
                 mcTranscodeTask.setWorker(workerId);
                 String taskContent = JSON.toJSONString(mcTranscodeTask);
-                String taskState = MCServerProxy.createTask(taskContent);
+                String taskState = MCServerProxy.createTask(taskContent,workerId);
                 //TODO:状态写入数据库
                  VCDNServerApp.logger.error(String.format("创建新转码任务成功，返回信息[%s]",taskContent));
             }

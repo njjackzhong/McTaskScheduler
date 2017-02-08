@@ -149,6 +149,8 @@ class MCWorkerStateSyncTask extends TimerTask {
     @Override
     public void run() {
         try {
+
+            MCServerProxy.getMediaInfo();
             //TODO: 修改逻辑，读取所有状态，根据正在运行的任务数目与maxTaskNum，判断是否可以提交新任务
             int maxTaskNum = VCDNServerApp.getMcMaxTaskNum();
             for (int workerId = 0; workerId < maxTaskNum; workerId++) {
@@ -174,7 +176,7 @@ class MCWorkerStateSyncTask extends TimerTask {
                     }
                 } else if (state.equalsIgnoreCase(MCStatus.MC_JS_PROCESSING) || state.equalsIgnoreCase(MCStatus.MC_JS_STOP)) {
                     //TODO:判断状态写入数据库
-                    VCDNServerApp.logger.info(workerState);
+//                    VCDNServerApp.logger.info(workerState);
 
                 }
                 //TODO:分析 是否存在其他情况需要处理
