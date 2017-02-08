@@ -4,6 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import vcdn.process.MCTaskProcessCenter;
+import vcdn.process.proxy.VCDNTaskDBProxy;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -65,8 +66,14 @@ public class VCDNServerApp implements ServletContextListener {
         String cfgPath = servletContextEvent.getServletContext().getRealPath("WEB-INF/conf");
         init(cfgPath);
 
-        //2.
+        //2.创建处理中心
         MCTaskProcessCenter.getInstance();
+
+
+        //3.读取任务
+        //TODO:启用定时器查询入库转码任务  2017-02-08   现在是测试MediaCoder接口阶段
+        //TODO: Id  大于多少的 未完成任务
+        VCDNTaskDBProxy.getWillTranscodeTask();
     }
 
     /**

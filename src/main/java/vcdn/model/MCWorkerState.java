@@ -8,8 +8,12 @@ package vcdn.model;
 public class MCWorkerState {
     //region  查询转码任务成功时，包含的属性值
 
+
+
+    private int worker;
+
     //转码状态，默认值是"unknown"表示是未知状态
-    private String state=MCStatus.MC_JS_UNKNOWN;
+    private String state = MCStatus.MC_JS_UNKNOWN;
     //转码完成比例：单位百分之几
     private int percent;
     //剩余时间：单位秒
@@ -19,7 +23,7 @@ public class MCWorkerState {
     //
     private int throughput;
     //转码倍数
-    private int speed;
+    private String speed;
     //音频码率
     private int audioBitrate;
     private int audioData;
@@ -27,7 +31,7 @@ public class MCWorkerState {
     private int duration;
     private int estimatedSize;
     //转码速度：每秒处理帧数
-    private int fps;
+    private String fps;
     //已经转码帧数??? 视频???
     private int frames;
     //实时处理数据位置：单位秒
@@ -46,6 +50,13 @@ public class MCWorkerState {
     private String error = "";
     //endregion
 
+    public int getWorker() {
+        return worker;
+    }
+
+    public void setWorker(int worker) {
+        this.worker = worker;
+    }
 
     //region 属性的getter & setter
     public String getState() {
@@ -88,11 +99,11 @@ public class MCWorkerState {
         this.throughput = throughput;
     }
 
-    public int getSpeed() {
+    public String getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(String speed) {
         this.speed = speed;
     }
 
@@ -128,11 +139,11 @@ public class MCWorkerState {
         this.estimatedSize = estimatedSize;
     }
 
-    public int getFps() {
+    public String getFps() {
         return fps;
     }
 
-    public void setFps(int fps) {
+    public void setFps(String fps) {
         this.fps = fps;
     }
 

@@ -12,7 +12,7 @@ import vcdn.util.MCHttpClient;
  * <p>
  * https://hc.apache.org/httpcomponents-client-ga/quickstart.html
  *
- * MCServer 转码服务的访问代理
+ * MediaCoderServer 转码服务的访问代理
  *
  */
 //@Controller
@@ -85,7 +85,7 @@ public class MCServerProxy {
             result = MCHttpClient.post(worker, description, VCDNServerApp.getMcStatusUrl());
         }
         catch (HttpHostConnectException e){
-            logger.error(String.format("处理Worker状态请求异常,%s", e));
+            logger.error(String.format("获取Worker[workerId=%d]状态请求异常,异常消息:[%s]", workerId,e));
             result = "{\"result\":\"fail\",\"error\":\"无法连接转码服务\"}";
         }
         //TODO:考虑result中是否包含异常原因？

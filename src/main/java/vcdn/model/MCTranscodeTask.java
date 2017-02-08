@@ -25,17 +25,17 @@ public class MCTranscodeTask {
     /**
      * 转码参数： 预设文件  默认值是空
      */
-    private String preset;
+    private String preset="";
 
     /**
      * 原始文件绝对路径
      */
-    private String input;
+    private String input="";
 
     /**
      * 目标文件绝对路径
      */
-    private String output;
+    private String output="";
 
     /**
      * 原始文起始位置（单位 ?）  默认值等于0
@@ -50,21 +50,21 @@ public class MCTranscodeTask {
     /**
      * 转码状态
      */
-    private String state;
+    private String state=MCStatus.MC_JS_UNKNOWN;
 
     /**
      * 转码参数： 微调参数
      */
-    private String prefs;
+    private String prefs="";
 
 
     /**
      * 获取转码任务的请求消息
      * @return  MCTranscodeTask JSON请求
      */
-    public String getTaskContent() {
-        return JSON.toJSONString(this);
-    }
+//    public String getTaskContent() {
+//        return JSON.toJSONString(this);
+//    }
 
     public int getWorker() {
         return worker;

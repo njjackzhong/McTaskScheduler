@@ -1,5 +1,6 @@
 package vcdn.process;
 
+import com.alibaba.fastjson.JSON;
 import vcdn.core.VCDNServerApp;
 import vcdn.model.MCTranscodeTask;
 import vcdn.process.proxy.MCServerProxy;
@@ -40,8 +41,15 @@ public class MCTaskConsumer implements Runnable {
         try {
             MCTranscodeTask mcTranscodeTask = MCTaskProcessCenter.getInstance().getTask();
             if(mcTranscodeTask!=null){
-                MCServerProxy.createTask(mcTranscodeTask.getTaskContent());
-                //TODO:写入数据库
+                //设置workerId
+                mcTranscodeTask.setWorker(workerId);
+                String taskContent = JSON.toJSONString(mcTranscodeTask);
+                String taskState = MCServerProxy.createTask(taskContent);
+                //TODO:状态写入数据库
+                 VCDNServerApp.logger.error(String.format("创建新转码任务成功，返回信息[%s]",taskContent));
+            }
+            else{
+                VCDNServerApp.logger.error(String.format("MCTaskConsumer [workerId=%d]，等待转码的任务列表是空",workerId));
             }
         } catch (Exception e) {
             VCDNServerApp.logger.error(e);

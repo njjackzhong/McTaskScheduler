@@ -1,6 +1,9 @@
 package vcdn.process.proxy;
 
+import vcdn.core.VCDNServerApp;
+import vcdn.model.MCStatus;
 import vcdn.model.MCTranscodeTask;
+import vcdn.process.MCTaskProcessCenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +22,25 @@ public class VCDNTaskDBProxy {
      *
      * @return 返回待转码任务
      */
-    public static List<MCTranscodeTask> getWillTranscodeTask() {
+    public static void getWillTranscodeTask() {
         //TODO:从Restful API从服务获取
+        //TODO:同时添加条件
         //task = "{\"/worker\":2,\"input\":\"d:\\Program\\Video\\FTP\\home.mkv\",\"output\":\"d:\\Program\\FTP\\MS\\home.mp4\",\"begin\":0,\"end\":10,\"state\":\"encoding\"}";
         MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
-        mcTranscodeTask.setInput("d:\\Program\\Video\\FTP\\home.mkv");
-        mcTranscodeTask.setOutput("d:\\Program\\Video\\FTP\\MS\\home.mp4");
+        mcTranscodeTask.setInput("d:\\Program\\Video\\FTP\\home1.mkv");
+        mcTranscodeTask.setOutput("d:\\Program\\Video\\FTP\\MS\\home1.mp4");
         mcTranscodeTask.setTaskId(1);
-//        mcTranscodeTask.setState();
+        mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
+        MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
 
-        List<MCTranscodeTask> willProcTask = new ArrayList<>();
-        willProcTask.add(0, mcTranscodeTask);
-        return willProcTask;
+
+//
+//        MCTranscodeTask secondmcTranscodeTask = new MCTranscodeTask();
+//        secondmcTranscodeTask.setInput("d:\\Program\\Video\\FTP\\home1.mkv");
+//        secondmcTranscodeTask.setOutput("d:\\Program\\Video\\FTP\\MS\\home1.mp4");
+//        secondmcTranscodeTask.setTaskId(2);
+//
+//        MCTaskProcessCenter.getInstance().addTask(secondmcTranscodeTask);
 
     }
 
