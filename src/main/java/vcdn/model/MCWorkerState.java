@@ -15,7 +15,7 @@ public class MCWorkerState {
     //转码状态，默认值是"unknown"表示是未知状态
     private String state = MCStatus.MC_JS_UNKNOWN;
     //转码完成比例：单位百分之几
-    private int percent;
+    private int percent = -1;
     //剩余时间：单位秒
     private int remainTime;
     //实际时间：单位秒

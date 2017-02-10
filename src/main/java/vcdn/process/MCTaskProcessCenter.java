@@ -165,12 +165,28 @@ class MCWorkerStateSyncTask extends TimerTask {
                 //如果转码状态是ready
                 String state = mcWorkerState.getState();
 
+                VCDNServerApp.logger.info(workerState);
+
+
                 if (state.equalsIgnoreCase(MCStatus.MC_JS_READY)) {
-                    if (MCTaskProcessCenter.getInstance().getTaskCount() > 0) {
+                    if (MCTaskProcessCenter.getInstance().getTaskCount() == 0) {
+                        VCDNServerApp.logger.info(String.format("[workerID=%d]当前等待转码的队列是空,无法创建新任务", workerId));
+                    }
+                    if (mcWorkerState.getPercent() == -1) {
                         MCTaskProcessCenter.getInstance().ExecuteMCTranscodeTask(workerId);
                     }
                 } else if (state.equalsIgnoreCase(MCStatus.MC_JS_DONE)) {
-                    if (MCTaskProcessCenter.getInstance().getTaskCount() > 0) {
+                    if (MCTaskProcessCenter.getInstance().getTaskCount() == 0) {
+                        VCDNServerApp.logger.info(String.format("[workerID=%d]当前等待转码的队列是空,无法创建新任务", workerId));
+                    }
+                    if (mcWorkerState.getPercent() == 100) {
+                        //TODO:判断状态写入数据库
+                        MCTaskProcessCenter.getInstance().ExecuteMCTranscodeTask(workerId);
+                    }
+                } else if (state.equalsIgnoreCase(MCStatus.MC_JS_ERROR)) {
+                    if (MCTaskProcessCenter.getInstance().getTaskCount() == 0) {
+                        VCDNServerApp.logger.info(String.format("[workerID=%d]当前等待转码的队列是空,无法创建新任务", workerId));
+                    } else {
                         //TODO:判断状态写入数据库
                         MCTaskProcessCenter.getInstance().ExecuteMCTranscodeTask(workerId);
                     }

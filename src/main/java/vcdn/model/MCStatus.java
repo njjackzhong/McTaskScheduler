@@ -27,6 +27,13 @@ public interface MCStatus {
      */
     String MC_JS_DONE = "done";
 
+
+    /**
+     * MediaCoder Job Status done
+     */
+    String MC_JS_ERROR = "error";
+
+
     /**
      *  MediaCoder Job Status unknown
      *

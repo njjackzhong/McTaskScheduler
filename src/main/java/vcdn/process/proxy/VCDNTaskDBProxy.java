@@ -5,6 +5,12 @@ import vcdn.model.MCStatus;
 import vcdn.model.MCTranscodeTask;
 import vcdn.process.MCTaskProcessCenter;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,19 +29,86 @@ public class VCDNTaskDBProxy {
      * @return 返回待转码任务
      */
     public static void getWillTranscodeTask() {
+        String dirName = VCDNServerApp.getMediaSourceDir();
+        File dir = new File(dirName);
+        if (!dir.exists()) {
+            VCDNServerApp.logger.error("不存在目录" + dirName);
+            return;
+        }
+
+//        FileFilter filter = new FileFilter() {
+//            @Override
+//            public boolean accept(File pathname) {
+//                return pathname.isFile();
+//            }
+//        };
+
+
+        FilenameFilter fileNameFilter = new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.lastIndexOf('.') > 0) {
+                    // get last index for '.' char
+                    int lastIndex = name.lastIndexOf('.');
+
+                    // get extension
+                    String str = name.substring(lastIndex);
+
+                    // match path name extension
+                    if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+
+
+        File[] files = dir.listFiles(fileNameFilter);
+
+        if (files == null) {
+            return;
+        }
+
+        int index = 0;
+
+        for (File path : files) {
+            if (path.isDirectory()) {
+                continue;
+            }
+
+            String preFileName = path.getName().substring(0, path.getName().lastIndexOf("."));//
+
+            Path msFilePath = Paths.get(dirName, "MS", preFileName + ".mp4");
+            System.out.println(path);
+
+
+            MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
+            mcTranscodeTask.setInput(path.getAbsolutePath());
+            mcTranscodeTask.setOutput(msFilePath.toString());
+            mcTranscodeTask.setPreset(VCDNServerApp.getMcConfigXmlPath());
+
+            mcTranscodeTask.setTaskId(index);
+//            mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
+            mcTranscodeTask.setState(MCStatus.MC_JS_READY);
+            MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
+
+            index++;
+        }
+
+
         //TODO:从Restful API从服务获取
         //TODO:同时添加条件
         //task = "{\"/worker\":2,\"input\":\"d:\\Program\\Video\\FTP\\home.mkv\",\"output\":\"d:\\Program\\FTP\\MS\\home.mp4\",\"begin\":0,\"end\":10,\"state\":\"encoding\"}";
-        MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
-//        mcTranscodeTask.setInput("e:\\FTP\\Home.mkv");
-//        mcTranscodeTask.setOutput("e:\\FTP\\MS\\Home.mp4");
-        mcTranscodeTask.setInput("e:\\FTP\\Ocean1.mkv");
-        mcTranscodeTask.setOutput("e:\\FTP\\MS\\Ocean1.mp4");
-        mcTranscodeTask.setPreset("e:\\test_20160208.xml");
-
-        mcTranscodeTask.setTaskId(2);
-        mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
-        MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
+//        MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
+//        mcTranscodeTask.setInput("e:\\FTP\\Assassin.720p.mkv");
+//        mcTranscodeTask.setOutput("e:\\FTP\\MS\\Assassin.720p.mp4");
+//        mcTranscodeTask.setPreset("e:\\GPU.xml");
+//
+//        mcTranscodeTask.setTaskId(2);
+//        mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
+//        MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
 
 
 

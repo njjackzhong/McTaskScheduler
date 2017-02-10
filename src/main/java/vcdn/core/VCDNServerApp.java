@@ -33,7 +33,7 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 转码服务  并发任务数
      */
-    private static int mcMaxTaskNum =4;
+    private static int mcMaxTaskNum = 1;
 
 
     /**
@@ -46,7 +46,7 @@ public class VCDNServerApp implements ServletContextListener {
 
 
     //转码服务状态同步周期，默认值1000，单位ms
-    private static int workerStateSyncCycle = 1000;
+    private static int workerStateSyncCycle = 5000;
 
 
     /**
@@ -62,6 +62,18 @@ public class VCDNServerApp implements ServletContextListener {
      */
     private static String mcMediaInfoUrl = "http://127.0.0.1:19819/mc/job";
 
+
+    /**
+     * 测试目录
+     */
+    private static String mediaSourceDir = "E:\\FTP\\Source";
+
+
+    /**
+     * 转码配置文件
+     */
+
+    private static String mcConfigXmlPath = "e:\\MediaCoderXml\\GPU_auto.xml";
 
 
     /**
@@ -174,6 +186,22 @@ public class VCDNServerApp implements ServletContextListener {
 
     public static void setWorkerStateSyncCycle(int workerStateSyncCyle) {
         VCDNServerApp.workerStateSyncCycle = workerStateSyncCyle;
+    }
+
+    public static String getMediaSourceDir() {
+        return mediaSourceDir;
+    }
+
+    public static void setMediaSourceDir(String mediaSourceDir) {
+        VCDNServerApp.mediaSourceDir = mediaSourceDir;
+    }
+
+    public static String getMcConfigXmlPath() {
+        return mcConfigXmlPath;
+    }
+
+    public static void setMcConfigXmlPath(String mcConfigXmlPath) {
+        VCDNServerApp.mcConfigXmlPath = mcConfigXmlPath;
     }
 
 

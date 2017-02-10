@@ -78,7 +78,7 @@ public class MCServerProxy {
      * @return 返回JSON格式
      */
     public static String getTaskStatus(int workerId) {
-        logger.info(String.format("请求Worker状态，workerId等于%d", workerId));
+        logger.debug(String.format("请求Worker状态，workerId等于%d", workerId));
         //String worker = String.format("{\"worker\":%d}", workerId);
         String description = "查询转码任务状态";
         String result;
@@ -96,7 +96,7 @@ public class MCServerProxy {
             logger.error(String.format("处理Worker状态请求异常,%s", e));
             result = "{\"result\":\"fail\",\"error\":\"处理Worker状态请求异常\"}";
         }
-        logger.info(String.format("返回Worker状态消息，消息内容=%s", result));
+        logger.debug(String.format("返回Worker状态消息，消息内容=%s", result));
         return result;
     }
 
