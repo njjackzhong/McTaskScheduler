@@ -57,7 +57,11 @@ public class VCDNTaskDBProxy {
 
                     // match path name extension
                     if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")) {
-                        return true;
+                        //match file name
+//                        if(name.contains("Assassin.mkv"))
+                        if (name.contains("home.mkv"))
+
+                            return true;
                     }
                 }
                 return false;
@@ -88,10 +92,12 @@ public class VCDNTaskDBProxy {
             mcTranscodeTask.setInput(path.getAbsolutePath());
             mcTranscodeTask.setOutput(msFilePath.toString());
             mcTranscodeTask.setPreset(VCDNServerApp.getMcConfigXmlPath());
+            mcTranscodeTask.setBegin(0);
+            mcTranscodeTask.setEnd(10000);
 
             mcTranscodeTask.setTaskId(index);
-//            mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
-            mcTranscodeTask.setState(MCStatus.MC_JS_READY);
+            mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
+//            mcTranscodeTask.setState(MCStatus.MC_JS_READY);
             MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
 
             index++;

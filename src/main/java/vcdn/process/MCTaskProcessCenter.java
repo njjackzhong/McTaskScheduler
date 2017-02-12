@@ -52,6 +52,8 @@ public class MCTaskProcessCenter {
     private ConcurrentHashMap<Integer, MCWorkerState> mcWorkerStateConcurrentHashMap = new ConcurrentHashMap<>();
 
 
+    Timer mcWorkStateSyncTimer = new Timer(true);
+
     /**
      * 单例
      */
@@ -100,6 +102,15 @@ public class MCTaskProcessCenter {
         return willProcTaskQueue.poll();
     }
 
+
+    public void stop() {
+        //TODO: 分析线程池与定时器直接退出是否合理   2017-02-12
+        mcWorkStateSyncTimer.cancel();
+
+        procExecutorPool.shutdownNow();
+    }
+
+
 //    public void addToken(int)
 
     private MCTaskProcessCenter() {
@@ -114,7 +125,7 @@ public class MCTaskProcessCenter {
         /*
             转码状态轮询定时器
          */
-        Timer mcWorkStateSyncTimer = new Timer(true);
+
         mcWorkStateSyncTimer.schedule(new MCWorkerStateSyncTask(""), 1000, VCDNServerApp.getWorkerStateSyncCycle());
 
 

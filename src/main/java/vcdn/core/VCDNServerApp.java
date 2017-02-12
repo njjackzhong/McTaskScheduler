@@ -66,14 +66,14 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 测试目录
      */
-    private static String mediaSourceDir = "E:\\FTP\\Source";
+    private static String mediaSourceDir = "D:\\Projects\\Movies\\MKV";
 
 
     /**
      * 转码配置文件
      */
 
-    private static String mcConfigXmlPath = "e:\\MediaCoderXml\\GPU_auto.xml";
+    private static String mcConfigXmlPath = "e:\\MediaCoderXml\\Auto_Auto.xml";
 
 
     /**
@@ -102,6 +102,7 @@ public class VCDNServerApp implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        MCTaskProcessCenter.getInstance().stop();
         //TODO:注销相关子线程
         logger.error("退出程序，注销相关服务");
     }
