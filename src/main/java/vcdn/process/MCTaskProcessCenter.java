@@ -145,6 +145,11 @@ public class MCTaskProcessCenter {
 
 /**
  * Media Coder 状态同步以及Worker任务调度
+ *
+ * ready---->encoding -----> done (*)
+ *      ---->error(*)
+ *      ---->ready (infinite loop)
+ *
  */
 class MCWorkerStateSyncTask extends TimerTask {
     private String info = "";
