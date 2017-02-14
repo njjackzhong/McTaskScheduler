@@ -56,10 +56,10 @@ public class VCDNTaskDBProxy {
                     String str = name.substring(lastIndex);
 
                     // match path name extension
-                    if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")) {
+                    if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi") || str.equals(".mpg") || str.equals(".dav") || str.equals(".flv")) {
                         //match file name
 //                        if(name.contains("Assassin.mkv"))
-                        if (name.contains("home.mkv"))
+                        //if (name.contains("HS.20.wmv"))
 
                             return true;
                     }
@@ -83,6 +83,8 @@ public class VCDNTaskDBProxy {
             }
 
             String preFileName = path.getName().substring(0, path.getName().lastIndexOf("."));//
+            String suffixName = path.getName().substring(path.getName().lastIndexOf("."));//
+
 
             Path msFilePath = Paths.get(dirName, "MS", preFileName + ".mp4");
             System.out.println(path);
@@ -91,7 +93,7 @@ public class VCDNTaskDBProxy {
             MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
             mcTranscodeTask.setInput(path.getAbsolutePath());
             mcTranscodeTask.setOutput(msFilePath.toString());
-            mcTranscodeTask.setPreset(VCDNServerApp.getMcConfigXmlPath());
+            mcTranscodeTask.setPreset(VCDNServerApp.getMediaCfgPath(suffixName));
             mcTranscodeTask.setBegin(0);
             mcTranscodeTask.setEnd(10000);
 

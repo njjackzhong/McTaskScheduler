@@ -9,6 +9,7 @@ import vcdn.process.proxy.VCDNTaskDBProxy;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -33,7 +34,7 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 转码服务  并发任务数
      */
-    private static int mcMaxTaskNum = 1;
+    private static int mcMaxTaskNum = 4;
 
 
     /**
@@ -64,9 +65,16 @@ public class VCDNServerApp implements ServletContextListener {
 
 
     /**
-     * 测试目录
+     * 测试视频源目录
      */
-    private static String mediaSourceDir = "D:\\Projects\\Movies\\MKV";
+    private static String mediaSourceDir = "D:\\Projects\\Movies\\10";
+
+
+    /**
+     * 测试转码后目录
+     */
+    private static String mediaDestDir = "D:\\Projects\\Movies\\MS";
+
 
 
     /**
@@ -74,6 +82,9 @@ public class VCDNServerApp implements ServletContextListener {
      */
 
     private static String mcConfigXmlPath = "e:\\MediaCoderXml\\Auto_Auto.xml";
+
+
+    public static HashMap<String, String> MCCfgXmlPath = new HashMap<>();
 
 
     /**
@@ -139,6 +150,7 @@ public class VCDNServerApp implements ServletContextListener {
         logger.error("（3）成功初始化程序");
 
 
+        MCCfgXmlPath.put(".dav", "e:\\MediaCoderXml\\DaHua_dav_Video-Auto_Audio-Close.xml");
 
         return true;
     }
@@ -206,4 +218,24 @@ public class VCDNServerApp implements ServletContextListener {
     }
 
 
+    public static String getMediaDestDir() {
+        return mediaDestDir;
+    }
+
+    public static void setMediaDestDir(String mediaDestDir) {
+        VCDNServerApp.mediaDestDir = mediaDestDir;
+    }
+
+    /**
+     * 根据后缀名获取Xml文件
+     *
+     * @param suffixName 后缀名
+     * @return 返回Xml文件
+     */
+    public static String getMediaCfgPath(String suffixName) {
+        if (MCCfgXmlPath.containsKey(suffixName)) {
+            return MCCfgXmlPath.get(suffixName);
+        }
+        return VCDNServerApp.getMcConfigXmlPath();
+    }
 }
