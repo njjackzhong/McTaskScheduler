@@ -56,7 +56,7 @@ public class VCDNTaskDBProxy {
                     String str = name.substring(lastIndex);
 
                     // match path name extension
-                    if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")) {
+                    if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")|| str.equals(".dav")) {
                         //match file name
 //                        if(name.contains("Assassin.mkv"))
                         if (name.contains("home.mkv"))
@@ -91,10 +91,16 @@ public class VCDNTaskDBProxy {
             MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
             mcTranscodeTask.setInput(path.getAbsolutePath());
             mcTranscodeTask.setOutput(msFilePath.toString());
-            mcTranscodeTask.setPreset(VCDNServerApp.getMcConfigXmlPath());
-            mcTranscodeTask.setBegin(0);
-            mcTranscodeTask.setEnd(10000);
+            if(path.getName().endsWith(".dav")){
 
+            }
+            else {
+                mcTranscodeTask.setPreset(VCDNServerApp.getMcConfigXmlPath());
+            }
+            mcTranscodeTask.setBegin(0);
+            mcTranscodeTask.setEnd(60000);
+//            mcTranscodeTask.setPrefs("\"overall\":{\"video\":{\"enabled\": true,\"bitrate\": 4000,},\"audio\": {\"enabled\": false}}");
+            //"overall":{"video":{"enabled": true,"bitrate": 4000,},"audio": {"enabled": true}}
             mcTranscodeTask.setTaskId(index);
             mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
 //            mcTranscodeTask.setState(MCStatus.MC_JS_READY);

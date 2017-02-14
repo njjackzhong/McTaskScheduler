@@ -9,6 +9,7 @@ import vcdn.process.proxy.VCDNTaskDBProxy;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -66,14 +67,19 @@ public class VCDNServerApp implements ServletContextListener {
     /**
      * 测试目录
      */
-    private static String mediaSourceDir = "D:\\Projects\\Movies\\MKV";
+    private static String mediaSourceDir = "D:\\Program\\Video\\FTP";
 
 
     /**
      * 转码配置文件
      */
 
-    private static String mcConfigXmlPath = "e:\\MediaCoderXml\\Auto_Auto.xml";
+    private static String mcConfigXmlPath = "D:\\MediaCoderXml\\CPU.xml";
+
+    /**
+     * 转码
+     */
+    private static HashMap<String,String> mcCfgXmlMap = new HashMap<>();
 
 
     /**
