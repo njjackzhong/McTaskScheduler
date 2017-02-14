@@ -1,17 +1,19 @@
 package vcdn.process.proxy;
 
+import com.alibaba.fastjson.JSON;
+import vcdn.core.VCDNConfigCenter;
 import vcdn.core.VCDNServerApp;
 import vcdn.model.MCStatus;
 import vcdn.model.MCTranscodeTask;
+import vcdn.model.ResultInfo;
+import vcdn.model.VCDNContent;
 import vcdn.process.MCTaskProcessCenter;
+import vcdn.util.MCHttpClient;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FilenameFilter;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,12 +26,11 @@ import java.util.List;
  */
 public class VCDNTaskDBProxy {
     /**
-     * 获取转码任务
+     * 获取转码任务信息 返回待转码任务-根据本地配置信息
      *
-     * @return 返回待转码任务
      */
-    public static void getWillTranscodeTask() {
-        String dirName = VCDNServerApp.getMediaSourceDir();
+    public static void getWillTranscodeTaskTest() {
+        String dirName = VCDNConfigCenter.getMediaSourceDir();
         File dir = new File(dirName);
         if (!dir.exists()) {
             VCDNServerApp.logger.error("不存在目录" + dirName);
@@ -56,10 +57,10 @@ public class VCDNTaskDBProxy {
                     String str = name.substring(lastIndex);
 
                     // match path name extension
-                    if (str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")|| str.equals(".dav")) {
+                    if (str.equalsIgnoreCase(".flv")||str.equalsIgnoreCase(".dav")||str.equals(".mkv") || str.equals(".ts") || str.equals(".mp4") || str.equals(".wmv") || str.equals(".avi")|| str.equals(".dav")) {
                         //match file name
 //                        if(name.contains("Assassin.mkv"))
-                        if (name.contains("home.mkv"))
+                       // if (name.contains("home.mkv"))
 
                             return true;
                     }
@@ -91,7 +92,7 @@ public class VCDNTaskDBProxy {
             MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
             mcTranscodeTask.setInput(path.getAbsolutePath());
             mcTranscodeTask.setOutput(msFilePath.toString());
-            mcTranscodeTask.setPreset(VCDNServerApp.getMcCfgXmlName(suffix));
+            mcTranscodeTask.setPreset(VCDNConfigCenter.getMcCfgXmlName(suffix));
             mcTranscodeTask.setBegin(0);
             mcTranscodeTask.setEnd(60000);
 //            mcTranscodeTask.setPrefs("\"overall\":{\"video\":{\"enabled\": true,\"bitrate\": 4000,},\"audio\": {\"enabled\": false}}");
@@ -103,32 +104,77 @@ public class VCDNTaskDBProxy {
 
             index++;
         }
-
-
-        //TODO:从Restful API从服务获取
-        //TODO:同时添加条件
-        //task = "{\"/worker\":2,\"input\":\"d:\\Program\\Video\\FTP\\home.mkv\",\"output\":\"d:\\Program\\FTP\\MS\\home.mp4\",\"begin\":0,\"end\":10,\"state\":\"encoding\"}";
-//        MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
-//        mcTranscodeTask.setInput("e:\\FTP\\Assassin.720p.mkv");
-//        mcTranscodeTask.setOutput("e:\\FTP\\MS\\Assassin.720p.mp4");
-//        mcTranscodeTask.setPreset("e:\\GPU.xml");
-//
-//        mcTranscodeTask.setTaskId(2);
-//        mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
-//        MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
-
-
-
-//        MCTranscodeTask secondmcTranscodeTask = new MCTranscodeTask();
-//        secondmcTranscodeTask.setInput("d:\\Program\\Video\\FTP\\home1.mkv");
-//        secondmcTranscodeTask.setOutput("d:\\Program\\Video\\FTP\\MS\\home1.mp4");
-//        secondmcTranscodeTask.setTaskId(2);
-//        secondmcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
-//        MCTaskProcessCenter.getInstance().addTask(secondmcTranscodeTask);
-
     }
 
 
+
+    public static void getWillTranscodeTask() {
+        //1.等待转码
+        VCDNServerApp.logger.info("获取待转码任务");
+
+        String convertedTaskList  = null;
+        try {
+            convertedTaskList = MCHttpClient.get("","", VCDNConfigCenter.getQueryServiceUrl() + "waitingContents");
+        } catch (Exception e) {
+            //TODO:日志
+            e.printStackTrace();
+
+        }
+        VCDNServerApp.logger.info("获取待转码任务，任务内容："+convertedTaskList);
+        ResultInfo resultInfo = JSON.parseObject(convertedTaskList,ResultInfo.class);
+        assert resultInfo != null;
+        if(resultInfo.isSucess())
+        {
+            String vcdnMsgList = JSON.toJSONString(resultInfo.getData());
+            List<VCDNContent> vcdnContentList = JSON.parseArray(vcdnMsgList, VCDNContent.class);
+            for (VCDNContent vcdnContent: vcdnContentList) {
+                String srcFileName = vcdnContent.SrcFileName;
+                String preFileName = srcFileName.substring(0, srcFileName.lastIndexOf("."));//
+                String suffix = srcFileName.substring(srcFileName.lastIndexOf("."));
+
+                //TODO:验证文件合法性,是否存在
+
+                MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
+                mcTranscodeTask.setVcdnContent(vcdnContent);
+                mcTranscodeTask.setPreset(VCDNConfigCenter.getMcCfgXmlName(suffix));
+                mcTranscodeTask.setInput(vcdnContent.SrcFileName);
+                mcTranscodeTask.setOutput(Paths.get(VCDNConfigCenter.getMediaDestDir(),preFileName,".mp4").toString());
+                mcTranscodeTask.setState(MCStatus.MC_JS_PROCESSING);
+                MCTaskProcessCenter.getInstance().addTask(mcTranscodeTask);
+            }
+
+
+//            for (VCDNContent vcdnContent: vcdnContentList){
+//                if(vcdnContent.TaskId==3){
+//                    vcdnContent.Process = 100;
+//                    vcdnContent.ProcessState=2;
+//                    vcdnContent.ProcessStateMsg="转码成功";
+//                    vcdnContent.VCDNNetUrl = "/MS/20170109/Ocean/ocean.mp4";
+//                    vcdnContent.VCDNConfigKey="vcdn_url";
+//                    vcdnContent.TaskUpdateTime = Calendar.getInstance().getTime();
+//                    MCHttpClient.put(JSON.toJSONString(vcdnContent),"",baseUrl+"updateContent");
+//                }
+//            }
+
+        }
+    }
+
+    public static String getVcdnConfig(){
+        //1.等待转码
+        VCDNServerApp.logger.info("准备读取服务端配置项");
+
+        String cfgmsg  = "";
+        try {
+            cfgmsg = MCHttpClient.get("","", VCDNConfigCenter.getQueryServiceUrl() + "configs");
+        } catch (Exception e) {
+            //TODO:日志
+            e.printStackTrace();
+            VCDNServerApp.logger.info("读取服务端配置项出错"+e);
+        }
+
+        VCDNServerApp.logger.info("完成读取服务端配置项");
+        return cfgmsg;
+    }
 
 
 }

@@ -15,6 +15,14 @@ public class MCTranscodeTask {
      */
 
     @JSONField(serialize = false)
+    private VCDNContent vcdnContent;
+
+
+    /**
+     * vcdn唯一编码  Tbl_VCDN_Content 视频资源表  主键 TaskId
+     */
+
+    @JSONField(serialize = false)
     private int taskId;
 
     /**
@@ -40,12 +48,12 @@ public class MCTranscodeTask {
     /**
      * 原始文起始位置（单位 ?）  默认值等于0
      */
-    private int begin;
+    private int begin=0;
 
     /**
      * 原始文件结束位置（单位 ?） 默认值等于0
      */
-    private int end;
+    private int end=0;
 
     /**
      * 转码状态
@@ -142,5 +150,17 @@ public class MCTranscodeTask {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public VCDNContent getVcdnContent() {
+        return vcdnContent;
+    }
+
+    public void setVcdnContent(VCDNContent vcdnContent) {
+        this.vcdnContent = vcdnContent;
+
+        //TODO:分析合理性
+        
+
     }
 }

@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -34,6 +35,7 @@ public class MCHttpClient {
 
         //1.Define Post Json Http entity
         StringEntity taskEntity = new StringEntity(task, ContentType.APPLICATION_JSON);
+        taskEntity.toString();
 
         //2.set httpPost entity
         httpPost.setEntity(taskEntity);
@@ -70,6 +72,7 @@ public class MCHttpClient {
         }
         HttpGet httpGet = new HttpGet(url);
 
+
         //1.get json response 2 server
         HttpResponse httpResponse = httpClient.execute(httpGet);
 
@@ -78,6 +81,47 @@ public class MCHttpClient {
         }
 
         //2. resolve httpResponse
+        HttpEntity httpResponseEntity  = httpResponse.getEntity();
+        if(httpResponseEntity!=null){
+            result =  EntityUtils.toString(httpResponseEntity);
+        }
+        httpClient.close();
+        return result;
+    }
+
+
+
+    /**
+     * put方式访问HttpServer转码任务
+     * @param task  任务参数
+     * @param taskDescription  任务描述
+     * @param url  Http  URL  地址
+     * @return 返回JSON字符串
+     * @throws Exception  异常
+     */
+    public static String put(String task,String taskDescription, String url) throws Exception{
+        String result = "";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        HttpPut httpPut;
+        httpPut = new HttpPut(url);
+
+        //1.Define Post Json Http entity
+        StringEntity taskEntity = new StringEntity(task, ContentType.APPLICATION_JSON);
+        //taskEntity.toString();
+
+        taskEntity.setContentEncoding("UTF-8");
+        //2.set httpPost entity
+        httpPut.setEntity(taskEntity);
+
+        //3.post json entity 2 server
+        HttpResponse httpResponse = httpClient.execute(httpPut);
+
+        if(httpResponse.getStatusLine().getStatusCode()!= HttpStatus.SC_OK){
+            throw new RuntimeException(taskDescription+"，错误码 : " + httpResponse.getStatusLine().getStatusCode());
+        }
+
+        //4. resolve httpResponse
         HttpEntity httpResponseEntity  = httpResponse.getEntity();
         if(httpResponseEntity!=null){
             result =  EntityUtils.toString(httpResponseEntity);

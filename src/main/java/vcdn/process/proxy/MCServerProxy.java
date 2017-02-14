@@ -2,7 +2,7 @@ package vcdn.process.proxy;
 
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.log4j.Logger;
-import vcdn.core.VCDNServerApp;
+import vcdn.core.VCDNConfigCenter;
 import vcdn.model.MCJobAction;
 import vcdn.util.MCHttpClient;
 
@@ -36,7 +36,7 @@ public class MCServerProxy {
         logger.info(String.format("%s，task=[%s]",description,task));
         try {
 //            return MCHttpClient.post(task, description, VCDNServerApp.getMcTransCodeUrl());
-            return MCHttpClient.post(task, description, VCDNServerApp.getMcTransCodeUrl()+workerId);
+            return MCHttpClient.post(task, description, VCDNConfigCenter.getMcTransCodeUrl()+workerId);
         } catch (Exception e) {
             //TODO log4j
 //            System.out.println("MCServerProxy.createTask() get Exception");
@@ -65,7 +65,7 @@ public class MCServerProxy {
         String task = String.format("{\"state\":\"%s\"}", action);
         //TODO: Dictionary 翻译任务
         try {
-            return MCHttpClient.post(task, action, VCDNServerApp.getMcTransCodeUrl());
+            return MCHttpClient.post(task, action, VCDNConfigCenter.getMcTransCodeUrl());
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -84,7 +84,7 @@ public class MCServerProxy {
         String result;
         try {
 //            result = MCHttpClient.post(worker, description, VCDNServerApp.getMcStatusUrl());
-            result = MCHttpClient.post("", description, VCDNServerApp.getMcStatusUrl()+workerId);
+            result = MCHttpClient.post("", description, VCDNConfigCenter.getMcStatusUrl()+workerId);
 
         }
         catch (HttpHostConnectException e){
@@ -112,7 +112,7 @@ public class MCServerProxy {
         String result;
         try {
 //            result = MCHttpClient.post(worker, description, VCDNServerApp.getMcStatusUrl());
-            result = MCHttpClient.post("", description, VCDNServerApp.getMcMediaInfoUrl());
+            result = MCHttpClient.post("", description, VCDNConfigCenter.getMcMediaInfoUrl());
 
         }
         catch (HttpHostConnectException e){

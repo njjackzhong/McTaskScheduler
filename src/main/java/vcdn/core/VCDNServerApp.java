@@ -9,8 +9,6 @@ import vcdn.process.proxy.VCDNTaskDBProxy;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
@@ -31,55 +29,6 @@ public class VCDNServerApp implements ServletContextListener {
     public static Logger logger = Logger.getRootLogger();
 
 
-    /**
-     * 转码服务  并发任务数
-     */
-    private static int mcMaxTaskNum = 1;
-
-
-    /**
-     * 转码任务状态URL
-     */
-    private static String mcStatusUrl = "http://127.0.0.1:19819/mc/stats/";
-
-    //版本号
-    private static final AtomicReference<String> version = new AtomicReference<>("v1.0.1.2017-01-17");
-
-
-    //转码服务状态同步周期，默认值1000，单位ms
-    private static int workerStateSyncCycle = 5000;
-
-
-    /**
-     * 转码任务以及任务控制访问URL
-     */
-    private static String mcTransCodeUrl = "http://127.0.0.1:19819/mc/transcoder/";
-
-
-
-
-    /**
-     * 获取转码前后文件信息
-     */
-    private static String mcMediaInfoUrl = "http://127.0.0.1:19819/mc/job";
-
-
-    /**
-     * 测试目录
-     */
-    private static String mediaSourceDir = "D:\\Program\\Video\\FTP";
-
-
-    /**
-     * 转码配置文件
-     */
-
-    private static String mcConfigXmlPath = "D:\\MediaCoderXml\\CPU.xml";
-
-    /**
-     * 转码配置文件字典
-     * */
-    private static HashMap<String,String> mcCfgXmlMap = new HashMap<>();
 
 
     /**
@@ -96,13 +45,16 @@ public class VCDNServerApp implements ServletContextListener {
         MCTaskProcessCenter.getInstance();
 
 
+        //TODO:读取任务表
+//        mcCfgXmlMap.put(".dav",FilenameUtils.concat(cfgPath,"dav.xml"));
+//        mcCfgXmlMap.put("*.*",FilenameUtils.concat(cfgPath,"GPU.xml"));
+
         //3.读取任务
         //TODO:启用定时器查询入库转码任务  2017-02-08   现在是测试MediaCoder接口阶段
         //TODO: Id  大于多少的 未完成任务
         VCDNTaskDBProxy.getWillTranscodeTask();
 
-        mcCfgXmlMap.put("*.dav",FilenameUtils.concat(cfgPath,"dav.CPU.xml"));
-        mcCfgXmlMap.put("*.*",FilenameUtils.concat(cfgPath,"CPU.xml"));
+
 
     }
 
@@ -138,7 +90,7 @@ public class VCDNServerApp implements ServletContextListener {
     public  boolean init(String cfgPath){
         //TODO:读取log4j.properties
         PropertyConfigurator.configureAndWatch(FilenameUtils.concat(cfgPath,"log4j.properties"),1);
-        logger.error(String.format("（1）版本号:%s，成功读取log4j.properties配置文件，路径等于：%s", version.get(),FilenameUtils.concat(cfgPath,"log4j.properties")));
+        logger.error(String.format("（1）版本号:%s，成功读取log4j.properties配置文件，路径等于：%s", VCDNConfigCenter.version.get(),FilenameUtils.concat(cfgPath,"log4j.properties")));
 
         //TODO: 读取数据库Tbl_VCDN_Config
 
@@ -146,87 +98,18 @@ public class VCDNServerApp implements ServletContextListener {
 
         logger.error("（2）成功读取xml配置文件");
 
-        logger.error("（3）成功初始化程序");
+        logger.error("（3）读取数据库配置表");
+
+        VCDNConfigCenter.init();
+
+
+
+        logger.error("（4）成功初始化程序");
 
 
 
         return true;
     }
 
-
-    /**
-     * 获取转码服务 并发任务数
-     * @return  并发任务数
-     */
-    public static int getMcMaxTaskNum() {
-        return mcMaxTaskNum;
-    }
-
-    public static void setMcMaxTaskNum(int mcMaxTaskNum) {
-        VCDNServerApp.mcMaxTaskNum = mcMaxTaskNum;
-    }
-
-    public static String getMcStatusUrl() {
-        return mcStatusUrl;
-    }
-
-    public static void setMcStatusUrl(String mcStatusUrl) {
-        VCDNServerApp.mcStatusUrl = mcStatusUrl;
-    }
-
-    public static String getMcTransCodeUrl() {
-        return mcTransCodeUrl;
-    }
-
-
-    public static String getMcMediaInfoUrl() {
-        return mcMediaInfoUrl;
-    }
-
-    public static void setMcMediaInfoUrl(String mcMediaInfoUrl) {
-        VCDNServerApp.mcMediaInfoUrl = mcMediaInfoUrl;
-    }
-
-    public static void setMcTransCodeUrl(String mcTransCodeUrl) {
-        VCDNServerApp.mcTransCodeUrl = mcTransCodeUrl;
-    }
-
-    public static int getWorkerStateSyncCycle() {
-        return workerStateSyncCycle;
-    }
-
-    public static void setWorkerStateSyncCycle(int workerStateSyncCyle) {
-        VCDNServerApp.workerStateSyncCycle = workerStateSyncCyle;
-    }
-
-    public static String getMediaSourceDir() {
-        return mediaSourceDir;
-    }
-
-    public static void setMediaSourceDir(String mediaSourceDir) {
-        VCDNServerApp.mediaSourceDir = mediaSourceDir;
-    }
-
-    public static String getMcConfigXmlPath() {
-        return mcConfigXmlPath;
-    }
-
-    public static void setMcConfigXmlPath(String mcConfigXmlPath) {
-        VCDNServerApp.mcConfigXmlPath = mcConfigXmlPath;
-    }
-
-    /**
-     * 根据传入文件信息选择转码配置文件
-     * @param suffix  后缀名或者其他信息
-     * @return   配置文件
-     */
-    public static  String getMcCfgXmlName(String suffix){
-        if(mcCfgXmlMap.containsKey(suffix)){
-            return mcCfgXmlMap.get(suffix);
-        }
-        else {
-            return mcCfgXmlMap.get("*.*");
-        }
-    }
 
 }

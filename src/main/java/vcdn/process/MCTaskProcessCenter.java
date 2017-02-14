@@ -1,12 +1,12 @@
 package vcdn.process;
 
 import com.alibaba.fastjson.JSONObject;
+import vcdn.core.VCDNConfigCenter;
 import vcdn.core.VCDNServerApp;
 import vcdn.model.MCStatus;
 import vcdn.model.MCTranscodeTask;
 import vcdn.model.MCWorkerState;
 import vcdn.process.proxy.MCServerProxy;
-import vcdn.process.proxy.VCDNTaskDBProxy;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -126,7 +126,7 @@ public class MCTaskProcessCenter {
             转码状态轮询定时器
          */
 
-        mcWorkStateSyncTimer.schedule(new MCWorkerStateSyncTask(""), 1000, VCDNServerApp.getWorkerStateSyncCycle());
+        mcWorkStateSyncTimer.schedule(new MCWorkerStateSyncTask(""), 1000, VCDNConfigCenter.getWorkerStateSyncCycle());
 
 
     }
@@ -163,7 +163,7 @@ class MCWorkerStateSyncTask extends TimerTask {
 
             //MCServerProxy.getMediaInfo();
             //TODO: 修改逻辑，读取所有状态，根据正在运行的任务数目与maxTaskNum，判断是否可以提交新任务
-            int maxTaskNum = VCDNServerApp.getMcMaxTaskNum();
+            int maxTaskNum = VCDNConfigCenter.getMcMaxTaskNum();
             for (int workerId = 0; workerId < maxTaskNum; workerId++) {
 
                 //TODO: START  处理流程，全部移植到MCTaskConsumer里
