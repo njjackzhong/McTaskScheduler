@@ -77,8 +77,8 @@ public class VCDNServerApp implements ServletContextListener {
     private static String mcConfigXmlPath = "D:\\MediaCoderXml\\CPU.xml";
 
     /**
-     * 转码
-     */
+     * 转码配置文件字典
+     * */
     private static HashMap<String,String> mcCfgXmlMap = new HashMap<>();
 
 
@@ -100,6 +100,10 @@ public class VCDNServerApp implements ServletContextListener {
         //TODO:启用定时器查询入库转码任务  2017-02-08   现在是测试MediaCoder接口阶段
         //TODO: Id  大于多少的 未完成任务
         VCDNTaskDBProxy.getWillTranscodeTask();
+
+        mcCfgXmlMap.put("*.dav",FilenameUtils.concat(cfgPath,"dav.CPU.xml"));
+        mcCfgXmlMap.put("*.*",FilenameUtils.concat(cfgPath,"CPU.xml"));
+
     }
 
     /**
@@ -211,5 +215,18 @@ public class VCDNServerApp implements ServletContextListener {
         VCDNServerApp.mcConfigXmlPath = mcConfigXmlPath;
     }
 
+    /**
+     * 根据传入文件信息选择转码配置文件
+     * @param suffix  后缀名或者其他信息
+     * @return   配置文件
+     */
+    public static  String getMcCfgXmlName(String suffix){
+        if(mcCfgXmlMap.containsKey(suffix)){
+            return mcCfgXmlMap.get(suffix);
+        }
+        else {
+            return mcCfgXmlMap.get("*.*");
+        }
+    }
 
 }

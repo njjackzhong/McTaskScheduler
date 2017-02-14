@@ -83,7 +83,7 @@ public class VCDNTaskDBProxy {
             }
 
             String preFileName = path.getName().substring(0, path.getName().lastIndexOf("."));//
-
+            String suffix = path.getName().substring(path.getName().lastIndexOf("."));
             Path msFilePath = Paths.get(dirName, "MS", preFileName + ".mp4");
             System.out.println(path);
 
@@ -91,12 +91,7 @@ public class VCDNTaskDBProxy {
             MCTranscodeTask mcTranscodeTask = new MCTranscodeTask();
             mcTranscodeTask.setInput(path.getAbsolutePath());
             mcTranscodeTask.setOutput(msFilePath.toString());
-            if(path.getName().endsWith(".dav")){
-
-            }
-            else {
-                mcTranscodeTask.setPreset(VCDNServerApp.getMcConfigXmlPath());
-            }
+            mcTranscodeTask.setPreset(VCDNServerApp.getMcCfgXmlName(suffix));
             mcTranscodeTask.setBegin(0);
             mcTranscodeTask.setEnd(60000);
 //            mcTranscodeTask.setPrefs("\"overall\":{\"video\":{\"enabled\": true,\"bitrate\": 4000,},\"audio\": {\"enabled\": false}}");
